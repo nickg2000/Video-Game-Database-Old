@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- beginning and load libraries -->
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Login COP4331</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="icon" href="data:,">
+        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+
+        <style>
+            .divider:after,
+            .divider:before {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: #eee;
+            }
+            .h-custom {
+                height: calc(100% - 73px);
+            }
+        </style>
+    </head>
+
+    <body class="vh-100" style="background-color:#49a6e8">
+
+
+        <div class="container-fluid h-custom">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+
+                
+
+                <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                    <form>
+                        <div class="d-flex justify-content-center">
+                            <p class="lead fw-bold mb-0">WELCOME TO THE ONLINE VIDEO GAME RETAIL DATABASE!</p>
+                        </div>
+                        
+
+                        <div class="divider d-flex align-items-center my-4">
+                            <p class="text-center fw-bold mx-3 mb-0"></p>
+                        </div>
+
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <input type="email" id="email" class="form-control form-control-lg" placeholder="Enter a valid email address" />
+                            <label class="form-label">Email address</label>
+                        </div>
+
+                        <!-- Password input -->
+                        <div class="form-outline mb-3">
+                            <input type="password" id="userPassword" class="form-control form-control-lg" placeholder="Enter password" />
+                            <label class="form-label">Password</label>
+                        </div>
+
+                        <div class="mt-4 pt-2" style="text-align: center">
+                            <button id="submitButton" type="button" class="btn btn-primary btn-lg" style="padding: 0.5rem 3rem">Login</button>
+                            <button id="signupButton" type="button" class="btn btn-primary btn-lg" onclick="location.href='register.html';">New user? Register here</button>
+                        </div>
+
+                        <div class="divider d-flex align-items-center my-4">
+                            <p id="errorMessage" class="text-center fw-bold mx-3 mb-0"></p>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+$(document).ready(function() {
+
+$("#loginName").val(localStorage.userName);
+
+Clean_Parameters();
+
+$("#submitButton").focusout( function() {
+    $("#errorMessage").text("");
+});
+
+$("#submitButton").click( function() {
+
+    var userName = $("#loginName").val();
+    var userPass = $("#userPassword").val();
+    var endPoint = "http://pcm.sudonet.cc/LAMPAPI/login.php";
+
+    // When you add both login and password, it requests API. Else, it will show an error message.
+    // This validates if login and password have content.
+    if (userName && userPass) {
+        RequestLogin(endPoint, userName, userPass );
+    } else {
+        $("#errorMessage").text("Please enter Email and Password");
+    };
+});
+
+$("#signupButton").click( function() {
+    location.href = "frontend.html";
+});
+});
+
+function RequestLogin( endPoint, userName, userPass ) {
+var request = $.ajax({
+    method: "POST",
+    url: endPoint,
+    data:{ login: userName, password: userPass },
+    dataType: "json"
+})
+.done(function( response ) {
+    var data = response;
+    if (data.success ) {
+        $("#loginName").val("");
+        $("#userPassword").val("");
+
+        localStorage.userId = data.id;
+        localStorage.userName = userName;
+        localStorage.userPass = userPass;
+        localStorage.firstName = data.firstName;
+        localStorage.lastName = data.lastName;
+
+        //Launches Welcome Contacts Page
+        location.href = "welcome.html";
+    } else {
+        $("#errorMessage").text(data.error);
+    };
+})
+.fail(function(jqXHR, textStatus, errorThrown) {
+    console.log(jqXHR);
+      console.log(textStatus);
+      console.log(errorThrown);
+      $("#errorMessage").text("Communication error: " + errorThrown);
+
+});
+}
+
+
+</script>
+
+
+</body></html>

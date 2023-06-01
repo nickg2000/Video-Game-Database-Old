@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- beginning and load libraries -->
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Login COP4331</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="icon" href="data:,">
+        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+
+        <style>
+            .divider:after,
+            .divider:before {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: #eee;
+            }
+            .h-custom {
+                height: calc(100% - 73px);
+            }
+        </style>
+    </head>
+
+    <body class="vh-100" style="background-color:#49a6e8">
+
+        <div class="container-fluid h-custom">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+
+                
+
+                <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                    <form>
+                        <div class="d-flex justify-content-center">
+                            <p class="lead fw-bold mb-0">Register</p>
+                        </div>
+                        
+
+                        <div class="divider d-flex align-items-center my-4">
+                            <p class="text-center fw-bold mx-3 mb-0"></p>
+                        </div>
+
+                        <!-- First name input -->
+                        <div class="form-outline mb-4">
+                            <input type="text" id="firstName" class="form-control form-control-lg" placeholder="First name" />
+                            <label class="form-label">First name</label>
+                        </div>
+
+                        <!-- Last name input -->
+                        <div class="form-outline mb-4">
+                            <input type="text" id="lastName" class="form-control form-control-lg" placeholder="Last name" />
+                            <label class="form-label">Last name</label>
+                        </div>
+
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <input type="email" id="email" class="form-control form-control-lg" placeholder="Enter a valid email address" />
+                            <label class="form-label">Email address</label>
+                        </div>
+
+                        <!-- Username input -->
+                        <div class="form-outline mb-4">
+                            <input type="text" id="userName" class="form-control form-control-lg" placeholder="Enter a username" />
+                            <label class="form-label">Username</label>
+                        </div>
+
+                        <!-- Password input -->
+                        <div class="form-outline mb-3">
+                            <input type="password" id="userPassword" class="form-control form-control-lg" placeholder="Enter password" />
+                            <label class="form-label">Password</label>
+                        </div>
+
+                        <!-- Re-enter Password input -->
+                        <div class="form-outline mb-3">
+                            <input type="password" id="userRePassword" class="form-control form-control-lg" placeholder="Re-enter password" />
+                            <label class="form-label">Re-enter Password</label>
+                        </div>
+
+                        <!-- Phone Number input -->
+                        <div class="form-outline mb-3">
+                            <input type="text" id="phoneNumber" class="form-control form-control-lg" placeholder="Enter phone number" />
+                            <label class="form-label">Phone number</label>
+                        </div>
+
+                        <div class="mt-4 pt-2" style="text-align: center">
+                            <button id="submitButton" type="button" class="btn btn-primary btn-lg" style="padding: 0.5rem 3rem">Create new account</button>
+                            <button id="backToLoginButton" type="button" class="btn btn-primary btn-lg">Go back</button>
+                        </div>
+
+                        <div class="divider d-flex align-items-center my-4">
+                            <p id="errorMessage" class="text-center fw-bold mx-3 mb-0"></p>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+$(document).ready(function() {
+
+$('#submitButton').on('click', function() {
+    
+    // Collect form data
+    var firstName = $('#firstName').val().trim();
+    var lastName = $('#lastName').val().trim();
+    var email = $('#email').val().trim();
+    var username = $('#userName').val().trim();
+    var password = $('#userPassword').val().trim();
+    var phoneNumber = $('#phoneNumber').val().trim();
+    
+    // Validate form data
+    if (firstName == '' || lastName == '' || email == '' || username == '' || password == '') {
+        $('#errorMessage').text('Please fill out all required fields.');
+        return;
+    }
+
+    // Send POST request to server to create new account
+    $.ajax({
+        url: '/api/users',
+        type: 'POST',
+        data: {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            username: username,
+            password: password,
+            phoneNumber: phoneNumber
+        },
+        success: function(data) {
+            window.location.href = 'index.html';
+        },
+        error: function(xhr, status, error) {
+            $('#errorMessage').text(xhr.responseText);
+        }
+    });
+});
+});
+
+$(document).ready(function() {
+
+$("#password").click( function(){
+    var passcode = $("#password").val();
+
+
+    if(passcode == '')
+    {
+        $("#requi").show();
+        $("#requi").delay("5000").fadeOut();
+
+    }
+
+
+});
+
+$("#reEnterPassword").keyup(function(){
+
+    var first_pass = $("#password").val();
+    var confirmation = $("#reEnterPassword").val();
+
+
+    if(first_pass != confirmation)
+    {
+        $("#registerButton").hide();
+        $("p").text("Password does not match").css("color","red" );
+        $("p").delay("fast").fadeIn();
+
+
+
+    }
+
+    else
+    {
+        $("p").text("Password match").css("color", "green");
+        $("p").delay(3000).fadeOut();
+        $("#registerButton").show();
+        $("span").hide();
+
+    }
+
+
+});
+
+$("#backToLoginButton").click( function() {
+        location.href = "index.html";
+});
+
+$("#registerButton").click( function() {
+        Request_Register_User(
+                $("#firstname").val(),
+                $("#lastname").val(),
+                $("#email").val(),
+                $("#password").val(),
+                $("#reEnterPassword").val()
+        );
+
+
+});
+
+});
+
+function Request_Register_User( firstName, lastName, email, password, confirmPassword ) {
+
+var endPoint = "http://pcm.sudonet.cc/LAMPAPI/registerUser.php";
+var request = $.ajax({
+        method: "POST",
+        url: endPoint,
+        data: JSON.stringify({
+                firstname: firstName,
+                lastname: lastName,
+                email: email,
+                password: password,
+                confirmpassword: confirmPassword
+        })
+
+
+
+
+
+})
+
+.done(function( response ) {
+
+        if ( !response.error ) {
+
+            $("#errorMessage").text( "User Created successfully.");
+            localStorage.userName = email;
+
+            location.href = "index.html";
+        }
+
+
+        else {
+                $("#errorMessage").text(response.error);
+        };
+})
+.fail(function(e) {
+        $("#errorMessage").text("Communication " + e.statusText + " !");
+})
+.always(function() {
+});
+}
+
+function uppercase(str)
+{
+return(/[A-Z]/.test(str));
+}
+
+</script>
+
+
+
+
+
+$("button").focusout( function() {
+        $("#errorMessage").text("");
+});
+
+    $('#registerButton').on('click', function() {
+            window.location.href = 'register.html';
+        });
+
+        // Button function to switch back to index page.
+        $('#signupButton').on('click', function() {
+            window.location.href = 'index.html';
+        });
+
+        
+
+</script>
